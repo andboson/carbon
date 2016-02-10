@@ -98,7 +98,7 @@ func TestBetween(t *testing.T) {
 	}
 }
 
-func TestExample(t *testing.T) {
+func Example() {
 	log.Printf("%s", Now()) // 2016-02-10 13:22:13.566251776 +0200 EET
 	log.Printf("%s", Now().AddDays(2)) // 2016-02-12 13:22:13.56669336 +0200 EET
 	log.Printf("%s", Now().SubDay())  // 2016-02-09 13:22:13.566810314 +0200 EETT
