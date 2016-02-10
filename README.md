@@ -31,6 +31,6 @@ stamp := "2015-01-25 15:04:55"
 time4, _ := CreateFrom(stamp) // 2015-01-25 15:04:55 +0000 UTC
 c.Gt(*time4) // true
 
-[carbon_test.go](https://github.com/andboson/carbon/blob/master/carbon_test.go)
-
 ```
+
+see [https://github.com/andboson/carbon/blob/master/carbon_test.go](https://github.com/andboson/carbon/blob/master/carbon_test.go) for more samples
