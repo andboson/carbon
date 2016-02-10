@@ -142,16 +142,16 @@ func (c *Carbon) AddYears(years int) *Carbon {
 	return c
 }
 
-func (c *Carbon) DiffInSeconds(from Carbon) float64 {
-	return math.Ceil(c.Sub(from.Time).Seconds())
+func (c *Carbon) DiffInSeconds(from Carbon) int {
+	return round(c.Sub(from.Time).Seconds())
 }
 
-func (c *Carbon) DiffInMinutes(from Carbon) float64 {
-	return math.Ceil(c.Sub(from.Time).Minutes())
+func (c *Carbon) DiffInMinutes(from Carbon) int {
+	return round(c.Sub(from.Time).Minutes())
 }
 
-func (c *Carbon) DiffInHours(from Carbon) float64 {
-	return math.Ceil(c.Sub(from.Time).Hours())
+func (c *Carbon) DiffInHours(from Carbon) int {
+	return round(c.Sub(from.Time).Hours())
 }
 
 // Determines if the instance is equal to another
@@ -174,7 +174,85 @@ func (c *Carbon) Between(before, after Carbon) bool {
 	return c.After(before.Time) && c.Before(after.Time)
 }
 
+func (c *Carbon) StartOfHour() *Carbon {
+	c.Time = c.Truncate(time.Hour)
+	return c
+}
+
+func (c *Carbon) EndOfHour() *Carbon {
+	c.StartOfHour()
+	c.Time = c.Add(time.Hour - time.Second)
+	return c
+}
+
+func (c *Carbon) StartOfDay() *Carbon {
+	c.Time = c.StartOfHour().Add(-time.Hour * time.Duration(c.Hour()))
+	return c
+}
+
+func (c *Carbon) EndOfDay() *Carbon {
+	c.Time = c.StartOfDay().Add(time.Hour * time.Duration(24) - time.Second)
+	return c
+}
+
+func (c *Carbon) StartOfWeek(firstDayOfWeekIsMonday ...bool) *Carbon {
+	firstDay := time.Monday
+	corrFirstDay := 1
+	if len(firstDayOfWeekIsMonday) > 0 {
+		if !firstDayOfWeekIsMonday[0] {
+			firstDay = time.Sunday
+			corrFirstDay = 0
+		}
+	}
+	c.StartOfDay()
+	if c.Weekday() != firstDay {
+		c.Time = c.Add(-time.Hour * 24 * time.Duration(-corrFirstDay+int(c.Weekday())))
+	}
+	return c
+}
+
+func (c *Carbon) EndOfWeek() *Carbon {
+	c.Time = c.StartOfWeek().Add(time.Hour * time.Duration(24 * 7) - time.Second)
+	return c
+}
+
+func (c *Carbon) StartOfMonth() *Carbon {
+	year := c.Year()
+	Month := c.Month()
+	location := time.Now().Location()
+	c = &Carbon{time.Date(year, Month, 1, 0, 0, 0, 0, location)}
+
+	return c
+}
+
+func (c *Carbon) EndOfMonth() *Carbon {
+	c.Time = c.StartOfMonth().AddDate(0,1,0).Add(- time.Second)
+	return c
+}
+
+func (c *Carbon) StartOfYear() *Carbon {
+	year := c.Year()
+	location := time.Now().Location()
+	c = &Carbon{time.Date(year, time.Month(1), 1, 0, 0, 0, 0, location)}
+
+	return c
+}
+
+func (c *Carbon) EndOfYear() *Carbon {
+	c.Time = c.StartOfYear().AddDate(1,0,0).Add(- time.Second)
+	return c
+}
+
+//formatters
+
 // return string with DateTime format "2006-01-25 15:04:05"
 func (c *Carbon) ToDateTimeString() string {
 	return c.Format(DATE_TIME_LAYOUT)
+}
+
+func round(f float64) int {
+	if math.Abs(f) < 0.5 {
+		return 0
+	}
+	return int(f + math.Copysign(0.5, f))
 }
