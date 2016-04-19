@@ -28,6 +28,12 @@ func Now() *Carbon {
 	return c
 }
 
+// return Carbon with time Now
+func CreateFromTime(timeObject time.Time) *Carbon {
+	c := &Carbon{timeObject}
+	return c
+}
+
 // create Carbon with year, month, day, hour, minute, second, nanosecond, int,  TZ string
 // Create(2001, 12, 01, 15, 25, 55, 0, "UTC") = 2001-12-01 13:25:55 +0000 UTC
 func Create(year, month, day int, args ...interface{}) *Carbon {
@@ -85,6 +91,22 @@ func (c *Carbon) SetTZ(tz string) *Carbon {
 	if location != nil {
 		c.Time = c.Time.In(location)
 	}
+	return c
+}
+
+// set time, ex. "23.59.29"
+func (c *Carbon) SetTime(hours, minutes, seconds int) *Carbon {
+	c.Time = time.Date(
+		c.Year(),
+		c.Month(),
+		c.Day(),
+		hours,
+		minutes,
+		seconds,
+		c.Nanosecond(),
+		c.Location(),
+	)
+
 	return c
 }
 
@@ -160,17 +182,17 @@ func (c *Carbon) Eq(another Carbon) bool {
 }
 
 // Determines if the instance is greater (after) than another
-func (c *Carbon) Gt(another Carbon) bool {
+func (c *Carbon) Gt(another *Carbon) bool {
 	return c.After(another.Time)
 }
 
 // Determines if the instance is less (Before) than another
-func (c *Carbon) Lt(another Carbon) bool {
+func (c *Carbon) Lt(another *Carbon) bool {
 	return c.Before(another.Time)
 }
 
 // Determines if the instance is greater than before and less than after
-func (c *Carbon) Between(before, after Carbon) bool {
+func (c *Carbon) Between(before, after *Carbon) bool {
 	return c.After(before.Time) && c.Before(after.Time)
 }
 
@@ -191,7 +213,7 @@ func (c *Carbon) StartOfDay() *Carbon {
 }
 
 func (c *Carbon) EndOfDay() *Carbon {
-	c.Time = c.StartOfDay().Add(time.Hour * time.Duration(24) - time.Second)
+	c.Time = c.StartOfDay().Add(time.Hour*time.Duration(24) - time.Second)
 	return c
 }
 
@@ -212,7 +234,7 @@ func (c *Carbon) StartOfWeek(firstDayOfWeekIsMonday ...bool) *Carbon {
 }
 
 func (c *Carbon) EndOfWeek() *Carbon {
-	c.Time = c.StartOfWeek().Add(time.Hour * time.Duration(24 * 7) - time.Second)
+	c.Time = c.StartOfWeek().Add(time.Hour*time.Duration(24*7) - time.Second)
 	return c
 }
 
@@ -226,7 +248,7 @@ func (c *Carbon) StartOfMonth() *Carbon {
 }
 
 func (c *Carbon) EndOfMonth() *Carbon {
-	c.Time = c.StartOfMonth().AddDate(0,1,0).Add(- time.Second)
+	c.Time = c.StartOfMonth().AddDate(0, 1, 0).Add(-time.Second)
 	return c
 }
 
@@ -239,7 +261,7 @@ func (c *Carbon) StartOfYear() *Carbon {
 }
 
 func (c *Carbon) EndOfYear() *Carbon {
-	c.Time = c.StartOfYear().AddDate(1,0,0).Add(- time.Second)
+	c.Time = c.StartOfYear().AddDate(1, 0, 0).Add(-time.Second)
 	return c
 }
 
