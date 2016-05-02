@@ -164,20 +164,20 @@ func (c *Carbon) AddYears(years int) *Carbon {
 	return c
 }
 
-func (c *Carbon) DiffInSeconds(from Carbon) int {
+func (c *Carbon) DiffInSeconds(from *Carbon) int {
 	return round(c.Sub(from.Time).Seconds())
 }
 
-func (c *Carbon) DiffInMinutes(from Carbon) int {
+func (c *Carbon) DiffInMinutes(from *Carbon) int {
 	return round(c.Sub(from.Time).Minutes())
 }
 
-func (c *Carbon) DiffInHours(from Carbon) int {
+func (c *Carbon) DiffInHours(from *Carbon) int {
 	return round(c.Sub(from.Time).Hours())
 }
 
 // Determines if the instance is equal to another
-func (c *Carbon) Eq(another Carbon) bool {
+func (c *Carbon) Eq(another *Carbon) bool {
 	return c.Equal(another.Time)
 }
 
