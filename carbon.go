@@ -3,6 +3,7 @@ package carbon
 import (
 	"math"
 	"time"
+	"strings"
 )
 
 const (
@@ -83,6 +84,15 @@ func CreateFrom(stringDate string) (*Carbon, error) {
 	}
 
 	return carbon, err
+}
+// custom Unmarshal func form many times formats
+func (t *Carbon) UnmarshalJSON(buf []byte) error {
+	tt, err := CreateFrom(strings.Trim(string(buf), `"`))
+	if err != nil {
+		return err
+	}
+	t.Time = tt.Time
+	return nil
 }
 
 // set tx location, ex. "UTC"
