@@ -12,7 +12,7 @@ func TestDiff(t *testing.T) {
 	//hours
 	time1 := Create(2001, 12, 01, 1, 0)
 	time2 := Create(2001, 12, 01, 3, 0)
-	diff := time1.DiffInHours(*time2)
+	diff := time1.DiffInHours(time2)
 
 	if diff != -2 {
 		t.Errorf("Diff in hours", diff)
@@ -20,7 +20,7 @@ func TestDiff(t *testing.T) {
 
 	time1 = Create(2001, 12, 01, 1)
 	time2 = Create(2001, 12, 01, 2)
-	diff = time1.DiffInMinutes(*time2)
+	diff = time1.DiffInMinutes(time2)
 
 	if diff != -60 {
 		t.Errorf("Diff in minutes", diff)
@@ -28,7 +28,7 @@ func TestDiff(t *testing.T) {
 
 	time1 = Create(2001, 12, 01, 1, 1)
 	time2 = Create(2001, 12, 01, 1, 2)
-	diff = time1.DiffInSeconds(*time2)
+	diff = time1.DiffInSeconds(time2)
 
 	if diff != -60 {
 		t.Errorf("Diff in seconds", diff)
@@ -39,7 +39,7 @@ func TestSub(t *testing.T) {
 	//hours
 	time1 := Now()
 	time2 := Now().SubDay()
-	diff := time1.DiffInHours(*time2)
+	diff := time1.DiffInHours(time2)
 	if diff != 24.00 {
 		t.Errorf("SubDay", time2, diff)
 	}
@@ -84,8 +84,8 @@ func TestCreateFromString(t *testing.T) {
 
 func TestBetween(t *testing.T) {
 	time1 := Create(time.Now().Year(), int(time.Now().Month()), time.Now().Day())
-	time2 := *time1 //pass by value
-	time3 := *time1 //pass by value
+	time2 := CreateFromTime(time.Now())
+	time3 := CreateFromTime(time.Now())
 	time2.SubDay()
 	time3.AddDay()
 
@@ -105,12 +105,12 @@ func Example() {
 	log.Printf("%s", Now().ToDateTimeString()) // 2016-02-10 13:22:13
 	log.Printf("%s", Now().SetTZ("UTC")) // 2016-02-10 11:22:13.567020044 +0000 UTC
 	time2 := Now().AddDay()
-	log.Printf("%s", Now().DiffInHours(*time2)) // -24
+	log.Printf("%s", Now().DiffInHours(time2)) // -24
 	time3 := Now().SubDay()
-	log.Printf("%s", Now().Between(*time3, *time2)) // true
+	log.Printf("%s", Now().Between(time3, time2)) // true
 	stamp := "2015-01-25 15:04:55"
 	time4, _ := CreateFrom(stamp)  // 2015-01-25 15:04:55 +0000 UTC
-	log.Printf("%s", Now().Gt(*time4)) // true
+	log.Printf("%s", Now().Gt(time4)) // true
 	log.Printf("%s", Now().StartOfHour()) // 2016-02-10 14:00:00 +0200 EET
 	log.Printf("%s", Now().EndOfHour()) // 2016-02-10 14:59:59 +0200 EET
 	log.Printf("%s", Now().StartOfDay()) // 2016-02-10 00:00:00 +0200 EET
