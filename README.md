@@ -2,6 +2,12 @@
 
 Is a time toolkit for golang, go implementation of [http://carbon.nesbot.com/](http://carbon.nesbot.com/) (PHP time toolkit)
 
+## Changelog
+
+- Added json Unmarshal function. Now you can use carbon.Carbon instead time.Time in structures. It can parse many time formats
+- added create from string datetime functon
+- added create from time.Time function
+- init
 
 ## Install
 
